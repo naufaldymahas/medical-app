@@ -8,7 +8,8 @@ import (
 
 func EmployeeRouter(r *chi.Mux) {
 	r.Route("/employee", func(r chi.Router) {
-		r.Post("/find", controller.FindOne)
-		r.Post("/make", controller.Create)
+		r.Post("/find", controller.FindOneEmployee)
+		r.Post("/make", controller.CreateEmployee)
+		r.Put("/add-role", controller.AddRoleToEmployee)
 	})
 }

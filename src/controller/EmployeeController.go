@@ -9,7 +9,7 @@ import (
 
 var employeeService = service.ProvideEmployeeService(config.InitDb())
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func CreateEmployee(w http.ResponseWriter, r *http.Request) {
 	var employee model.Employee
 	err := employeeService.Create(employee, r)
 	if err != nil {
@@ -25,13 +25,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	service.RespondWithJSON(w, http.StatusOK, response)
 }
 
-func FindOne(w http.ResponseWriter, r *http.Request) {
-	var employee model.Employee
-
+func FindOneEmployee(w http.ResponseWriter, r *http.Request) {
 	response := map[string]interface{}{
 		"statusCode": 200,
 	}
-	e, isTrue := employeeService.FindOne(r, employee)
+
+	e, isTrue := employeeService.FindOne(r)
 
 	if isTrue == false {
 		response["statusCode"] = 400
@@ -45,6 +44,22 @@ func FindOne(w http.ResponseWriter, r *http.Request) {
 		"firstname": e.Firstname,
 		"lastname":  e.Lastname,
 		"email":     e.Email,
+		"roles":     e.Roles,
+	}
+
+	service.RespondWithJSON(w, 200, response)
+}
+
+func AddRoleToEmployee(w http.ResponseWriter, r *http.Request) {
+	err := employeeService.AddRole(r)
+	if err != nil {
+		service.ErrorHandler(w, err)
+		return
+	}
+
+	response := map[string]interface{}{
+		"statusCode": 200,
+		"message":    "Success adding role to employee",
 	}
 
 	service.RespondWithJSON(w, 200, response)

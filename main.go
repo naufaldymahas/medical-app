@@ -20,6 +20,7 @@ func main() {
 	db.Debug().AutoMigrate(&model.Employee{}, &model.User{}, &model.Role{})
 
 	router.EmployeeRouter(r)
+	router.RoleRouter(r)
 
 	fmt.Println("Listening on port 3000")
 	http.ListenAndServe(":3000", r)

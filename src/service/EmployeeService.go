@@ -28,17 +28,29 @@ func (es EmployeeService) Create(e model.Employee, r *http.Request) error {
 	return err
 }
 
-func (es EmployeeService) FindOne(r *http.Request, e model.Employee) (model.Employee, bool) {
+func (es EmployeeService) FindOne(r *http.Request) (model.Employee, bool) {
+	var e model.Employee
+	// var roles model.Role
 	err := json.NewDecoder(r.Body).Decode(&e)
 	if err != nil {
 		log.Fatal(err)
 	}
 	plainPwd := []byte(e.Password)
-	es.Db.Where("username = ?", e.Username).First(&e)
+	es.Db.Where("username = ?", e.Username).Preload("Roles").First(&e)
 	isTrue := comparePassword(e.Password, plainPwd)
 	fmt.Println("isTrue: ", isTrue)
 	if isTrue == false {
 		return e, false
 	}
 	return e, true
+}
+
+func (es EmployeeService) AddRole(r *http.Request) error {
+	// var e model.Employee
+	var er model.EmployeeRole
+	err := json.NewDecoder(r.Body).Decode(&er)
+
+	es.Db.Create(&er)
+
+	return err
 }
