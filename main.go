@@ -19,6 +19,7 @@ func main() {
 	db := config.InitDb()
 	db.Debug().AutoMigrate(&model.Employee{}, &model.User{}, &model.Role{})
 
+	router.AuthRouter(r)
 	router.EmployeeRouter(r)
 	router.RoleRouter(r)
 

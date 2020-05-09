@@ -35,8 +35,12 @@ func (es EmployeeService) FindOne(r *http.Request) (model.Employee, bool) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	if err := es.Db.Where("username = ?", e.Username).Preload("Roles").First(&e); err != nil {
+		return e, false
+	}
+
 	plainPwd := []byte(e.Password)
-	es.Db.Where("username = ?", e.Username).Preload("Roles").First(&e)
 	isTrue := comparePassword(e.Password, plainPwd)
 	fmt.Println("isTrue: ", isTrue)
 	if isTrue == false {

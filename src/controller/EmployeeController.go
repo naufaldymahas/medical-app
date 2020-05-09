@@ -33,9 +33,9 @@ func FindOneEmployee(w http.ResponseWriter, r *http.Request) {
 	e, isTrue := employeeService.FindOne(r)
 
 	if isTrue == false {
-		response["statusCode"] = 400
-		response["message"] = "Unauthenticated!"
-		service.RespondWithJSON(w, 400, response)
+		response["statusCode"] = http.StatusUnauthorized
+		response["message"] = "User or password not found!"
+		service.RespondWithJSON(w, http.StatusUnauthorized, response)
 		return
 	}
 
