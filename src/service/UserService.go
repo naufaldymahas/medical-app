@@ -19,13 +19,13 @@ func ProvideUserService(DB *gorm.DB) UserService {
 	}
 }
 
-func (us UserService) Create(r *http.Request) error {
+func (us UserService) Create(r *http.Request) (model.User, error) {
 	var user model.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	user.Password = hashAndSalt([]byte(user.Password))
 	us.Db.Create(&user)
 
-	return err
+	return user, err
 }
 
 func (us UserService) FindOne(r *http.Request) (model.User, bool) {

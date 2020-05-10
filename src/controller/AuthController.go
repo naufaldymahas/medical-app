@@ -33,11 +33,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	err := authService.Create(r)
+	u, err := authService.Create(r)
 	if err != nil {
 		service.ErrorHandler(w, err)
 		return
 	}
+
+	if err := service.EmailHandler(u); err != nil {
+		service.ErrorHandler(w, err)
+	}
+
 	service.RespondWithJSON(w, http.StatusOK, map[string]interface{}{
 		"statusCode": http.StatusOK,
 		"message":    "User has been created!",
